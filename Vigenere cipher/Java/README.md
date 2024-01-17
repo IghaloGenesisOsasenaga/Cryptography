@@ -9,7 +9,7 @@ This Java program implements the Vigenere Cipher, providing functionality for bo
 
 1. Compile the program:
    ```bash
-   javac VigenereCipher.java
+   java VigenereCipher.java
 2. Run the program:
    ```bash
    java VigenereCipher
