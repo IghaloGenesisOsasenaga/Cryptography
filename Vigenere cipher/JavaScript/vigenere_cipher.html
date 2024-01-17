@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Vigenere Cipher</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="vigenere_cipher.css">
+    </head>
+    <body>
+        <main>
+            <h2>JavaScript program for working with the Vigenere Cipher. (Encrypter and Decrypter)</h2>
+            <div class="txt_field">
+                <input id="key" type="text" pattern="[a-zA-Z]+$" required>
+                <label id="key_label">Cipher Key.</label>
+            </div>
+            <div class="txt_field">
+                <input id="decrypt" type="checkbox">
+                <span>Decrypt.</span>
+            </div>
+            <div class="txt_field">
+                <textarea id="text" required></textarea>
+                <label>Enter your text here...</label>
+            </div>
+            <button id = "run_btn">Run</button>
+        </main>
+        <script src="vigenere_cipher_JavaScript.js"></script>
+    </body>
+</html>
