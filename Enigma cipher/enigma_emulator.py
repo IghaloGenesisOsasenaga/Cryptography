@@ -5,6 +5,7 @@ class EnigmaEmulator:
         self.rg_settings = ring_settings
         self.start_pos = starting_positions
         self.text = text
+        self.decrypt = decrypt
         self._num_of_rotors = len(rotor_order)
         self._alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         self._nulls = {
@@ -73,10 +74,12 @@ class EnigmaEmulator:
             'B': "YRUHQSLDPXNGOKMIEBFZCWVJAT"
         }
         self._lampboard = "" # This is basically an output variable.
+        self._sequence_marker = [v for k, v in self.nulls.items()]
         
         #Applying settings
         self._apply_settings()
-        self._refine_text()
+        if not self.decrypt:
+            self._refine_text()
      
     def _plugboard(self, letter):
         return self._plugboard_cipher[letter]
@@ -110,21 +113,28 @@ class EnigmaEmulator:
      
     def _refine_text(self):
         refined_text = ""
-        replacement_dict = self._nulls if decrypt else self._reversed__nulls
+        replacement_dict = self._reversed__nulls
         for char in self.text:
             if char.isalpha():
                 refined_text += char
             else:
                 replacement = replacement_dict.get(char, char)
                 refined_text += replacement
-        return refined_text
+        self.text = refined_text
      
     def _turnover(self):
         step = True
         for i in range(self._num_of_rotors):
-            
+            rotor = self._rotor_pack[self.rotor_order[i]]
+            if step:
+                rotor['position'] += 1
+                step = False
+            if rotor['position'] == rotor['turnover_notch']:
+                step = True
+            else: break
      
     def _keyboard(self):
+        j = 0
         for char in self.text:
             plgb1 = self._plugboard(char)
             rtl_rotors = self._rotors(plgb1)
@@ -132,4 +142,77 @@ class EnigmaEmulator:
             ltr_rotors = self._rotors(reflctd_letter, reflected=True)
             self._turnover()
             plgb2 = self._plugboard(ltr_rotors)
+            if j == 4:
+                self._lampboard += ' '
             self._lampboard += plgb2
+            j = (j + 1) % 4
+     
+    def _decrypt(self):
+        output = ""
+        current_sequence = ""
+        replacement_dict = self.nulls
+        in_sequence = False
+        for char in self._lampboard:
+            if char.isalpha():
+                if not in_sequence and char in self._sequence_marker:
+                    current_sequence += char
+                    in_sequence = True
+                elif in_sequence:
+                    current_sequence += char
+                    if len(current_sequence) == 3:
+                        output += replacement_dict.get(current_sequence, current_sequence)
+                        current_sequence = ""
+                        in_sequence = False
+                else:
+                    output += char
+        return output
+     
+    def run():
+        self._keyboard()
+        if self.decrypt:
+            print(self._decrypt())
+        else:
+            print(self._lampboard)
+
+
+if __name__ == '__main__':
+    print("""
+    Python Enigma Emulator, #Terminal Community model.
+    -> Usage:
+    Input;
+    Rotor order: 15 23 14 or OWN
+    Plugboard sequence: EU RT FI GH JK LM NQ PD OA WV BZ SY XC
+    Ring settings: 2 17 9 or BQI
+    Starting positions: 6 4 2 or FDB
+    Text: +Some normal text or -Some encrypted text
+    
+    Output:
+    DECRPYTED OUTPUT IN ALL CAPS
+    ENCR YPTE DHRL OUTP UTHR LINH RLAL LHRL CAPS
+    
+    Notes:
+    The sequence 'HRL' is a null sequence for the space ' ' character.
+    These nulls are usually encrypted in the encrypted output, So it's
+    likely you won't be seeing the in output, as that sequence would
+    have been encrypted. And in decrypted messages, you won't see them
+    either as they would have be translated to their special character.
+    In summary, Encrypted output contains encrypted letters in groups
+    of four and decrypted messages contains letters and special
+    characters in word groups.
+    """)
+    rtr_ord = []
+    plgb_sq = []
+    rng_stg = []
+    str_pos = []
+    inp_txt = ""
+    invalid_input = True
+    while invalid_input:
+        if rtr_ord = []: inp1 = input()
+        if plgb_sq = []: inp2 = input()
+        if rng_stg = []: inp3 = input()
+        if str_pos = []: inp4 = input()
+        if inp_txt = "": inp5 = input()
+        
+        if inp1.isalpha() and t:
+            t1 = 
+    EnigmaEmulator().run()
