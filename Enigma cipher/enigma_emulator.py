@@ -1,6 +1,3 @@
-from re import match
-
-
 class EnigmaEmulator:
     def __init__(self, rotor_order, plugboard_sequence, ring_settings, starting_positions, text, decrypt):
         self.rotor_order = rotor_order
@@ -215,15 +212,22 @@ class EnigmaEmulator:
         return reflected_letter
      
     def _turnover(self):
-        # The 'step' variable is initialized to be True so that at least the rightmost rotor makes a step
-        step = True
-        for i in range(self._num_of_rotors-1, -1, -1):
-            rotor = self._rotor_pack[self.rotor_order[i]]
-            if step:
-                # if this rotor is allowed to step and it will move by one unit
-                rotor['position'] = (rotor['position'] + 1) % 26
+        for i in range(self._num_of_rotors-1, 0, -1):
+            current_rotor = self._rotor_pack[self.rotor_order[i]]
+            previous_rotor = self._rotor_pack[self.rotor_order[i-1]]
+      
+            # Move the rightmost rotor by one unit at each keypress
+            if i == self._num_of_rotors-1:
+                current_rotor['position'] = (current_rotor['position'] + 1) % 26
+                current_rotor['offset_wiring'] = current_rotor['offset_wiring'][1:] + current_rotor['offset_wiring'][:1]
             
-            if rotor['position'] != rotor['turnover_notch']:
+            # Check if the current rotor's turnover notch is reached
+            if current_rotor['position'] == current_rotor['turnover_notch']:
+                # Move the previous rotor if the notch is reached
+                previous_rotor['position'] = (previous_rotor['position'] + 1) % 26
+                previous_rotor['offset_wiring'] = previous_rotor['offset_wiring'][1:] + previous_rotor['offset_wiring'][:1]
+            else:
+                # If the notch is not reached, break the loop
                 break
      
     def _plugboard(self, letter):
@@ -318,7 +322,7 @@ def validate_plugboard(inp):
     output = []
     swp = ""
     for swap in inp.split():
-        # Make a swap doesn't contain more thatn two letters and number of swaps are less than 13
+        # Make a swap doesn't contain more than two letters and number of swaps are less than 13
         if len(swap) > 2 or len(output) > 13:
             output = []
             break
@@ -339,17 +343,28 @@ def validate_plugboard(inp):
 def validate_text(inp):
     output = inp[1:]
     decrypt = False
+    length = len(output)
     if inp[0] not in ('+', '-'):
         return ""
     if inp[0] == '-':
         # Pattern for encrypted messages
-        pattern = rf'^-[A-Za-z]{{{len_of_cluster}}}( [A-Za-z]{{{len_of_cluster}}}){{0, {len_of_cluster}}} [A-Za-z]{{0, {len_of_cluster}}}$'
+        cut = count  = 0
+        for char in output:
+            count += 1
+            # Check for complete clusters at beginning and middle of string
+            if cut == len_of_cluster and char == ' ' and count != length:
+                cut = -1; valid = True
+            # Check for complete and incomplete clusters at end of string
+            elif cut != len_of_cluster and char != ' ' and count == length:
+                valid = True
+            # Anything else is considered invalid
+            else:
+                valid = False
+            cut += 1
         decrypt = True
-        valid = bool(match(pattern, inp))
         if not valid:
             output = ""
-        
-    print(output)
+    
     return (output.upper(), decrypt)
 
 
