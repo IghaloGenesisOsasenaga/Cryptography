@@ -55,4 +55,4 @@ DECRYPTED TEXT IN ALL CAPS
 - This Emulator is not an exact replica of the one used in world war two. This emulator is a model of the **#Terminal Community**.
 - `_decrypt` method inside the `EnigmaEmulator` class might not always work as expected.
 
-Feel free to contribute or report issues on [GitHub](https://github.com/Genesis-js/Cryptography)
+Feel free to report issues on [GitHub](https://github.com/Genesis-js/Cryptography/issues)

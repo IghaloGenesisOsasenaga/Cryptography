@@ -42,4 +42,4 @@ This C program implements the Vigenere Cipher, serving as both an encrypter and 
 * Non-alphabetic characters remain unchanged.
 * The key must consist of only alphabetic characters.
 
-Feel free to contribute or report issues on [GitHub](https://github.com/Genesis-js/Cryptography)
+Feel free to report issues on [GitHub](https://github.com/Genesis-js/Cryptography/issues)

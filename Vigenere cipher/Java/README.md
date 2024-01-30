@@ -10,18 +10,24 @@ This Java program implements the Vigenere Cipher, providing functionality for bo
 1. Compile the program:
    ```bash
    java VigenereCipher.java
+   ```
 2. Run the program:
    ```bash
    java VigenereCipher
+   ```
 3. Input the key: Enter a minus sign before the key for decryption (e.g., -key).Use a plus sign for encryption (e.g., +key).
 4. Enter the text to be encrypted or decrypted.
 ## Example
-Encrypting text:
+1. Encrypting text:
+    ```
     Key: +key
     Plain Text: Hello
-Decrypting text:
+    ```
+2. Decrypting text:
+    ```
     Key: -key
     Encrypted Text: Rcpvm
+    ```
 ### Notes
 * The program handles both uppercase and lowercase letters.
 * Non-alphabetic characters remain unchanged.
